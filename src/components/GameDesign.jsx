@@ -1,6 +1,7 @@
 import Section from './Section'
 import Tag from './Tag'
 import Pill from './Pill'
+import { motion } from 'framer-motion'
 
 const tiers = [
   { range: '1000-1600', name: 'Minor League', desc: 'AHL-style arena' },
@@ -55,6 +56,24 @@ function Grid({ items, render }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {items.map(render)}
+    </div>
+  )
+}
+
+function ChestCard({ ch }) {
+  const sparkly = ch.rarity === 'Epic' || ch.rarity === 'Legendary' || ch.rarity === 'Champion'
+  return (
+    <div className={`relative p-4 rounded-xl border bg-slate-900/40 flex items-center justify-between ${rarityFrames[ch.rarity] || 'border-blue-500/20'}`}>
+      <div>
+        <h3 className="text-white font-semibold">{ch.name}</h3>
+        <p className="text-blue-200/70 text-sm">{ch.note}</p>
+      </div>
+      <Tag label="Chest" />
+      {sparkly && (
+        <motion.div className="pointer-events-none absolute -inset-1 opacity-0 hover:opacity-100" initial={false} animate={{}}>
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.12) 40%, transparent 60%)' }} />
+        </motion.div>
+      )}
     </div>
   )
 }
@@ -115,13 +134,7 @@ export default function GameDesign() {
         <Grid
           items={chests}
           render={(ch) => (
-            <div key={ch.name} className={`p-4 rounded-xl border bg-slate-900/40 flex items-center justify-between ${rarityFrames[ch.rarity] || 'border-blue-500/20'}`}>
-              <div>
-                <h3 className="text-white font-semibold">{ch.name}</h3>
-                <p className="text-blue-200/70 text-sm">{ch.note}</p>
-              </div>
-              <Tag label="Chest" />
-            </div>
+            <ChestCard key={ch.name} ch={ch} />
           )}
         />
       </Section>
