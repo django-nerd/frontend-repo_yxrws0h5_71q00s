@@ -1,7 +1,7 @@
 /* Reusable section wrapper */
-export default function Section({ title, subtitle, children }) {
+export default function Section({ title, subtitle, children, id }) {
   return (
-    <section className="relative mb-10">
+    <section id={id} className="relative mb-10">
       <div className="mb-4">
         <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{title}</h2>
         {subtitle && (
