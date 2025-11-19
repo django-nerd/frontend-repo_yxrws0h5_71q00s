@@ -1,11 +1,13 @@
 import GameDesign from './GameDesign'
 import VisualDesign from './VisualDesign'
+import ArtLibrary from './ArtLibrary'
 import { ArrowUp, Compass, Palette, Layers, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 function TopNav() {
   const items = [
     { id: 'visual', label: 'Visual Design', icon: Palette },
+    { id: 'library', label: 'Art Library', icon: Sparkles },
     { id: 'systems', label: 'Systems', icon: Layers },
     { id: 'ui', label: 'UI / HUD', icon: Compass },
   ]
@@ -43,6 +45,7 @@ function Footer() {
         <p className="text-sm">Hockey Game Design — concept showcase</p>
         <div className="flex items-center gap-2">
           <a href="#visual" className="text-sm px-3 py-1.5 rounded-full border border-blue-500/20 bg-slate-800/40 hover:bg-slate-800/60">Visual</a>
+          <a href="#library" className="text-sm px-3 py-1.5 rounded-full border border-blue-500/20 bg-slate-800/40 hover:bg-slate-800/60">Library</a>
           <a href="#ui" className="text-sm px-3 py-1.5 rounded-full border border-blue-500/20 bg-slate-800/40 hover:bg-slate-800/60">UI/HUD</a>
           <a href="#systems" className="text-sm px-3 py-1.5 rounded-full border border-blue-500/20 bg-slate-800/40 hover:bg-slate-800/60">Systems</a>
         </div>
@@ -76,6 +79,7 @@ export default function HockeyDesignPage() {
         <TopNav />
         <div className="space-y-8">
           <VisualDesign />
+          <ArtLibrary />
           <div id="systems">
             <GameDesign />
           </div>
