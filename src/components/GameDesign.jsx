@@ -20,20 +20,28 @@ const currencies = [
 ]
 
 const rarity = [
-  { name: 'Common', color: 'text-white', levels: '1-13' },
-  { name: 'Rare', color: 'text-blue-300', levels: '3-11' },
-  { name: 'Epic', color: 'text-purple-300', levels: '6-8' },
-  { name: 'Legendary', color: 'text-amber-300', levels: '9-5' },
-  { name: 'Champion', color: 'text-slate-100', levels: 'Special max variants' },
+  { name: 'Common', color: 'text-white border-slate-300/50 ring-slate-300/40', levels: '1-13' },
+  { name: 'Rare', color: 'text-blue-300 border-sky-400/50 ring-sky-400/40', levels: '3-11' },
+  { name: 'Epic', color: 'text-purple-300 border-violet-500/50 ring-violet-500/40', levels: '6-8' },
+  { name: 'Legendary', color: 'text-amber-300 border-amber-400/60 ring-amber-400/40', levels: '9-5' },
+  { name: 'Champion', color: 'text-teal-200 border-teal-400/60 ring-teal-400/40', levels: 'Special max variants' },
 ]
 
 const chests = [
-  { name: 'Wooden Stick Chest', note: 'Common • 3h unlock' },
-  { name: 'Silver Puck Chest', note: 'Rare • 8h unlock' },
-  { name: 'Golden Goal Chest', note: 'Epic • 12h unlock' },
-  { name: 'Stanley Cup Chest', note: 'Legendary • 24h unlock' },
-  { name: 'Overtime Victory Chest', note: 'Special • Instant after clutch wins' },
+  { name: 'Wooden Stick Chest', note: 'Common • 3h unlock', rarity: 'Common' },
+  { name: 'Silver Puck Chest', note: 'Rare • 8h unlock', rarity: 'Rare' },
+  { name: 'Golden Goal Chest', note: 'Epic • 12h unlock', rarity: 'Epic' },
+  { name: 'Stanley Cup Chest', note: 'Legendary • 24h unlock', rarity: 'Legendary' },
+  { name: 'Overtime Victory Chest', note: 'Special • Instant after clutch wins', rarity: 'Champion' },
 ]
+
+const rarityFrames = {
+  Common: 'border-slate-300/40 ring-1 ring-slate-300/30',
+  Rare: 'border-sky-400/40 ring-1 ring-sky-400/30',
+  Epic: 'border-violet-500/40 ring-1 ring-violet-500/30',
+  Legendary: 'border-amber-400/50 ring-1 ring-amber-400/30',
+  Champion: 'border-teal-400/50 ring-1 ring-teal-400/30',
+}
 
 const modes = [
   { title: '1v1 Regulation', desc: '3-min, Best of 1 period, trophies based on outcome' },
@@ -90,10 +98,10 @@ export default function GameDesign() {
         <Grid
           items={rarity}
           render={(r) => (
-            <div key={r.name} className="p-4 rounded-xl border border-blue-500/20 bg-slate-900/40">
+            <div key={r.name} className={`p-4 rounded-xl border bg-slate-900/40 ${r.color} ${r.color.includes('border') ? '' : 'border-blue-500/20'}`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className={`font-semibold ${r.color}`}>{r.name}</h3>
+                  <h3 className={`font-semibold ${r.color.split(' ')[0]}`}>{r.name}</h3>
                   <p className="text-blue-200/70 text-sm">Levels: {r.levels}</p>
                 </div>
                 <Tag label="Rarity" />
@@ -107,14 +115,12 @@ export default function GameDesign() {
         <Grid
           items={chests}
           render={(ch) => (
-            <div key={ch.name} className="p-4 rounded-xl border border-blue-500/20 bg-slate-900/40">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-white font-semibold">{ch.name}</h3>
-                  <p className="text-blue-200/70 text-sm">{ch.note}</p>
-                </div>
-                <Tag label="Chest" />
+            <div key={ch.name} className={`p-4 rounded-xl border bg-slate-900/40 flex items-center justify-between ${rarityFrames[ch.rarity] || 'border-blue-500/20'}`}>
+              <div>
+                <h3 className="text-white font-semibold">{ch.name}</h3>
+                <p className="text-blue-200/70 text-sm">{ch.note}</p>
               </div>
+              <Tag label="Chest" />
             </div>
           )}
         />

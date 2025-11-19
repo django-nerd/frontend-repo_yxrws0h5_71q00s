@@ -1,5 +1,5 @@
 import Section from './Section'
-import { Sparkles, Users, Palette, Trophy, Star, Wand2, Music, PartyPopper, Flame, Crown, Gauge, TimerReset, Megaphone, Shield, Swords, Flag, Paintbrush, Radar, Circle, TrophyIcon, SwordsIcon } from 'lucide-react'
+import { Sparkles, Users, Palette, Trophy, Star, Wand2, Music, PartyPopper, Flame, Crown, Gauge, TimerReset, Megaphone, Shield, Swords, Paintbrush, SwordsIcon } from 'lucide-react'
 
 function Bullet({ icon: Icon, children }) {
   return (
@@ -10,9 +10,16 @@ function Bullet({ icon: Icon, children }) {
   )
 }
 
-function Card({ title, icon: Icon, children, badge }) {
+function Chip({ label, className }) {
   return (
-    <div className="p-4 rounded-xl border border-blue-500/20 bg-slate-900/40">
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${className}`}>{label}</span>
+  )
+}
+
+function Card({ title, icon: Icon, children, badge, accent }) {
+  const accentBorder = accent ? `border-${accent}` : 'border-blue-500/20'
+  return (
+    <div className={`p-4 rounded-xl border ${accentBorder} bg-slate-900/40`}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {Icon && <Icon className="h-5 w-5 text-blue-300" />}
@@ -40,7 +47,69 @@ function RaritySwatch({ name, className, glow }) {
   )
 }
 
+const rarityColors = {
+  Common: {
+    ring: 'ring-slate-300/60',
+    border: 'border-slate-300/60',
+    glow: '0 0 18px rgba(203,213,225,0.35)'
+  },
+  Rare: {
+    ring: 'ring-sky-400/70',
+    border: 'border-sky-400/60',
+    glow: '0 0 20px rgba(56,189,248,0.45)'
+  },
+  Epic: {
+    ring: 'ring-violet-500/70',
+    border: 'border-violet-500/60',
+    glow: '0 0 22px rgba(139,92,246,0.5)'
+  },
+  Legendary: {
+    ring: 'ring-amber-400/70',
+    border: 'border-amber-400/60',
+    glow: '0 0 22px rgba(251,191,36,0.55)'
+  },
+  Champion: {
+    ring: 'ring-teal-400/70',
+    border: 'border-teal-400/60',
+    glow: '0 0 24px rgba(45,212,191,0.55)'
+  }
+}
+
+const teamPalettes = [
+  { code: 'CAN', name: 'Canada', colors: ['#D32F2F', '#FFFFFF'] },
+  { code: 'USA', name: 'USA', colors: ['#1E3A8A', '#DC2626'] },
+  { code: 'SWE', name: 'Sweden', colors: ['#F59E0B', '#2563EB'] },
+  { code: 'FIN', name: 'Finland', colors: ['#2563EB', '#FFFFFF'] },
+  { code: 'RUS', name: 'Russia', colors: ['#EF4444', '#FFFFFF', '#2563EB'] },
+  { code: 'CZE', name: 'Czechia', colors: ['#EF4444', '#FFFFFF', '#2563EB'] },
+  { code: 'SUI', name: 'Switzerland', colors: ['#EF4444', '#FFFFFF'] },
+]
+
+function TeamPaletteGrid() {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      {teamPalettes.map((t) => (
+        <div key={t.code} className="p-3 rounded-lg border border-blue-500/20 bg-slate-900/50">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white font-semibold text-sm">{t.code}</span>
+            <Chip label={t.name} className="bg-slate-800/60 text-blue-100 border-blue-500/30" />
+          </div>
+          <div className="flex items-center gap-2">
+            {t.colors.map((c, i) => (
+              <span key={i} className="h-5 w-5 rounded-full border border-white/20" style={{ backgroundColor: c }} />
+            ))}
+            <div className="flex-1 h-2 rounded-full ml-2" style={{
+              background: `linear-gradient(90deg, ${t.colors.join(', ')})`
+            }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function HudMockups() {
+  const cardData = ['Common','Rare','Epic','Legendary']
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {/* Stick-shaped stamina bar */}
@@ -73,17 +142,20 @@ function HudMockups() {
           <span className="inline-flex items-center gap-1"><Shield className="w-3 h-3" /> PP</span>
         </div>
       </div>
-      {/* Card hand */}
+      {/* Card hand with rarity frames */}
       <div className="p-3 rounded-lg bg-slate-800/70 border border-blue-500/20 sm:col-span-2">
         <p className="text-blue-200/80 mb-2 text-sm">Card Hand</p>
         <div className="flex gap-3 justify-center">
-          {['Common','Rare','Epic','Legendary'].map((rar, i) => (
-            <div key={i} className="w-24 h-36 rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 relative overflow-hidden">
-              <div className="absolute inset-0 opacity-70" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15), transparent 40%)' }} />
-              <div className="absolute top-2 left-2 text-xs text-white/90 font-semibold">{rar}</div>
-              <div className="absolute bottom-2 right-2 text-[10px] text-white/80">2 elixir</div>
-            </div>
-          ))}
+          {cardData.map((rar, i) => {
+            const rc = rarityColors[rar]
+            return (
+              <div key={i} className={`w-24 h-36 rounded-xl relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 ring-2 ${rc?.ring || ''} border ${rc?.border || 'border-white/10'}`} style={{ boxShadow: rc?.glow }}>
+                <div className="absolute inset-0 opacity-70" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15), transparent 40%)' }} />
+                <div className="absolute top-2 left-2 text-xs text-white/90 font-semibold">{rar}</div>
+                <div className="absolute bottom-2 right-2 text-[10px] text-white/80">2 elixir</div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
@@ -112,6 +184,15 @@ export default function VisualDesign() {
               <Bullet icon={Flame}>Unique animations: skating, checks, cellys, ref-argues</Bullet>
               <Bullet icon={Trophy}>Equipment skins: vintage, modern, futuristic</Bullet>
             </ul>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Chip label="CAN" className="bg-red-600/20 text-red-200 border-red-400/30" />
+              <Chip label="USA" className="bg-blue-600/20 text-blue-200 border-blue-400/30" />
+              <Chip label="SWE" className="bg-yellow-500/20 text-yellow-200 border-yellow-400/30" />
+              <Chip label="FIN" className="bg-blue-500/20 text-blue-200 border-blue-300/40" />
+              <Chip label="RUS" className="bg-red-600/20 text-red-200 border-red-400/30" />
+              <Chip label="CZE" className="bg-red-600/20 text-red-200 border-red-400/30" />
+              <Chip label="SUI" className="bg-red-600/20 text-red-200 border-red-400/30" />
+            </div>
           </Card>
         </div>
 
@@ -133,6 +214,12 @@ export default function VisualDesign() {
               <RaritySwatch name="Legendary" className="bg-amber-400" glow="0 0 14px rgba(251,191,36,0.7)" />
               <RaritySwatch name="Champion" className="bg-teal-400" glow="0 0 16px rgba(45,212,191,0.7)" />
             </div>
+          </Card>
+        </div>
+
+        <div className="mt-4">
+          <Card title="Team Themes" icon={Palette} badge="Palettes">
+            <TeamPaletteGrid />
           </Card>
         </div>
       </Section>
